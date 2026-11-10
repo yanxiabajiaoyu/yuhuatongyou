@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>富春山居图厅 · 与画同游</title>
+  <meta name="description" content="元代黄公望《富春山居图》互动展厅：拖滚长卷、随卷入画、点松枝看枝叶轻摆、点江面看水纹前移，与AI讲解员同游水墨山水。">
+  <link rel="stylesheet" href="css/style.css?v=7">
+</head>
+<body data-page="hall" data-hall="fuchun">
+
+  <div class="page-wrap">
+
+    <!-- ======== 顶部通栏：返回 / 竖排画名+作者印章 / 环境音+本厅印章 ======== -->
+    <header class="hall-topbar">
+      <div class="topbar-side topbar-side--left">
+        <a class="back-link" href="index.html">← 返回序厅</a>
+      </div>
+      <div class="topbar-center">
+        <h1 class="hall-title-v">富春山居图</h1>
+        <div class="topbar-meta">
+          <span class="topbar-meta-text">元 · 黄公望</span>
+          <span class="seal-mini">公望</span>
+          <span class="topbar-meta-text">第二厅 · 共三厅</span>
+        </div>
+      </div>
+      <div class="topbar-side topbar-side--right">
+        <button class="ambient-toggle" id="ambientToggle" type="button">听声</button>
+        <span class="ambient-state" id="ambientState">已关</span>
+        <span class="seal-mini seal-mini--round is-dim" id="hallSealMini" title="本厅鉴藏印">藏</span>
+      </div>
+    </header>
+
+    <!-- ======== 区域一：画作展示区（长卷横向探索） ======== -->
+    <section class="hall-section">
+      <div class="section-head">
+        <span class="section-no">壹</span>
+        <span class="section-name">画作展示</span>
+        <span class="section-hint">从右往左 · 徐徐展卷</span>
+      </div>
+
+      <div class="hs-layout">
+        <div class="hs-main">
+          <!-- 长卷舞台 -->
+          <div class="hs-stage">
+            <div class="hs-viewport" id="hsViewport">
+              <div class="hs-track" id="hsTrack">
+                <div class="hs-edge" aria-hidden="true"></div>
+                <div class="hs-img-wrap">
+                  <img class="hs-img" id="hsImg" src="assets/images/fuchun/full.jpg?v=2" alt="富春山居图全卷">
+                  <!-- 渔船热点（找一找目标） -->
+                  <button class="hotspot" id="hsHotspotBoat" style="left:61.2%; top:32%;" aria-label="渔船，点一点">
+                    <span class="hotspot-dot"></span>
+                    <span class="hotspot-label">渔船</span>
+                  </button>
+                </div>
+                <div class="hs-edge" aria-hidden="true"></div>
+              </div>
+            </div>
+            <div class="hs-hint">← 向左拖滚 · 徐徐展卷</div>
+          </div>
+
+          <!-- 控制条：自动导览 + 全卷缩略导航 -->
+          <div class="hs-controls">
+            <button class="btn hs-tour-btn" id="hsTourBtn" type="button">随卷入画</button>
+            <div class="hs-nav" id="hsNav" aria-label="全卷缩略导航">
+              <img class="hs-nav-thumb" src="assets/images/fuchun/thumb.jpg" alt="">
+              <div class="hs-nav-box" id="hsNavBox"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 侧栏竖排赏析面板（段落由 JS 随卷位联动渲染） -->
+        <aside class="hs-panel" id="hsPanel" aria-live="polite"></aside>
+      </div>
+
+      <p class="painting-caption">
+        <strong>《富春山居图》</strong> · 元 · 黄公望 · 纸本水墨 ·《剩山图》浙江省博物馆藏 /《无用师卷》台北故宫博物院藏<br>
+        图像来源：公有领域高清影像（全卷，以《无用师卷》为主体）
+      </p>
+    </section>
+
+    <!-- ======== 区域二+三：互动体验 / 观画任务卡（桌面7:3并排） ======== -->
+    <div class="interact-task-grid">
+      <section class="hall-section">
+        <div class="section-head">
+          <span class="section-no">贰</span>
+          <span class="section-name">互动体验</span>
+        </div>
+
+        <div class="interact-stage stage-fuchun" id="stage">
+          <!-- 水墨动画引擎：自动分割画中元素并赋予合理运动 -->
+          <canvas class="ink-canvas" id="inkCanvas"></canvas>
+        </div>
+        <p class="interact-tip">
+          玩法：画中的<b>江水、松树、云气</b>会自动轻轻流动；<b>点一点</b>画中任意元素，看它应声而动；对麦克风<b>轻轻吹气</b>，云气飘散、松枝摇摆加剧。
+        </p>
+
+        <!-- 声音互动 -->
+        <div class="sound-card" id="soundCard">
+          <h3>声音互动</h3>
+          <p class="sound-desc"><b>轻轻吹气</b> → 江面水纹流动加快</p>
+          <p class="sound-status" id="soundStatus">未开启</p>
+          <div class="mic-meter" id="micMeter"><div class="mic-meter-bar" id="micMeterBar"></div></div>
+          <button class="btn btn--teal" id="soundEnableBtn">开启麦克风</button>
+        </div>
+      </section>
+
+      <section class="hall-section">
+        <div class="section-head">
+          <span class="section-no">叁</span>
+          <span class="section-name">观画任务卡</span>
+          <span class="section-hint">完成三个任务，为本厅盖印</span>
+        </div>
+
+        <div class="task-list">
+          <div class="task-item" data-task="find">
+            <div class="task-no">壹</div>
+            <div class="task-body">
+              <div class="task-name">找一找 · 江上渔舟</div>
+              <div class="task-desc">在上面的大长卷上找到那叶扁舟（朱红圆点），点一点它——画家为什么把人画得这么小？</div>
+            </div>
+            <div class="task-seal-round">鉴藏</div>
+          </div>
+          <div class="task-item" data-task="interact">
+            <div class="task-no">贰</div>
+            <div class="task-body">
+              <div class="task-name">点一点 · 松风水纹</div>
+              <div class="task-desc">在互动区点一点松枝或江面水纹，任选一处，看画中之物轻轻动起来。</div>
+            </div>
+            <div class="task-seal-round">鉴藏</div>
+          </div>
+          <div class="task-item" data-task="quiz">
+            <div class="task-no">叁</div>
+            <div class="task-body">
+              <div class="task-name">答一答 · 名画身世</div>
+              <div class="task-desc">在下方对话区向 AI 讲解员提问：这幅画为什么被分成了两段？得到答案后，点下方按钮盖章。</div>
+              <button class="btn btn--teal" data-quiz-btn>我已答对</button>
+            </div>
+            <div class="task-seal-round">鉴藏</div>
+          </div>
+        </div>
+
+        <div class="hall-seal-area" id="hallSealArea" hidden>
+          <div class="seal-stamp" id="hallSeal">富春<br>山居</div>
+          <p class="seal-msg">
+            <strong>本厅任务全部完成，印章已点亮！</strong><br>
+            「墨葡萄图」展厅已解锁。<a href="hall-moputao.html" style="color:var(--vermilion); text-decoration:underline;">前往下一厅 →</a>
+          </p>
+        </div>
+      </section>
+    </div>
+
+    <!-- ======== 区域四：AI讲解员对话区 ======== -->
+    <section class="hall-section hall-section--chat">
+      <div class="section-head">
+        <span class="section-no">肆</span>
+        <span class="section-name">AI讲解员</span>
+        <span class="section-hint">看画产生疑问？随手问。</span>
+      </div>
+      <div class="chat-grid">
+        <div class="chat-aside">
+          <p>看画时有了好奇，随时问身边的 AI 讲解员。比如：</p>
+          <div class="ask-list">
+            <div class="ask-item">这幅画为什么被分成两段？</div>
+            <div class="ask-item">黄公望画这幅画时多大年纪？</div>
+            <div class="ask-item">什么是「披麻皴」？</div>
+          </div>
+        </div>
+        <div class="chat-box">
+          <div class="chat-mount" id="chatMountDesktop"></div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ======== 移动端：对话区悬浮按钮 + 底部抽屉 ======== -->
+  <button class="chat-fab" id="chatFab">问讲解员</button>
+  <div class="chat-drawer-mask" id="chatDrawerMask"></div>
+  <div class="chat-drawer" id="chatDrawer">
+    <div class="drawer-head">
+      <span class="drawer-title">AI讲解员</span>
+      <button class="drawer-close" id="chatDrawerClose" aria-label="关闭">×</button>
+    </div>
+    <div class="chat-box" style="border:none; flex:1;">
+      <div class="chat-mount" id="chatMountMobile"></div>
+    </div>
+  </div>
+
+  <!-- ======== 麦克风授权弹窗 ======== -->
+  <div class="modal-mask" id="micModal">
+    <div class="modal-card">
+      <h3>开启声音互动</h3>
+      <p>本展厅支持用声音与古画互动：对麦克风<b>轻轻吹气</b>，江面水纹流得更急。需要调用你的麦克风来感知声音大小。</p>
+      <p class="privacy-note">仅在你设备本地检测声音大小，不录音、不上传、不存储。</p>
+      <div class="modal-actions">
+        <button class="btn btn--solid" id="micAllow">允许使用麦克风</button>
+        <button class="btn" id="micDeny">暂不开启</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 轻提示 -->
+  <div class="toast" id="toast"></div>
+
+  <script src="js/config.js?v=4"></script>
+  <script src="js/engine.js?v=5"></script>
+  <script src="js/audio.js?v=4"></script>
+  <script src="js/scroll.js?v=5"></script>
+  <script src="js/main.js?v=4"></script>
+</body>
+</html>

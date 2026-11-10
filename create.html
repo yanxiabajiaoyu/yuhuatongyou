@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>自由创作 · 水墨动画 · 与画同游</title>
+  <meta name="description" content="上传任意水墨画，本地自动分离笔墨元素并生成动态画面，只让画中已有的元素动起来。">
+  <link rel="stylesheet" href="css/style.css?v=7">
+</head>
+<body data-page="create">
+
+  <div class="page-wrap create-page">
+
+    <!-- 顶部返回 -->
+    <nav class="hall-nav">
+      <a class="back-link" href="index.html">← 返回序厅</a>
+      <span class="seal-stamp create-nav-seal">自由<br>创作</span>
+    </nav>
+
+    <header class="create-head">
+      <h1 class="create-title">自 由 创 作</h1>
+      <p class="create-sub">上传一幅水墨画，让画中已有的笔墨轻轻动起来</p>
+    </header>
+
+    <hr class="ink-divider">
+
+    <!-- 上传区 -->
+    <section class="create-upload" id="dropZone">
+      <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" hidden>
+      <div class="create-upload-inner">
+        <div class="create-upload-icon">＋</div>
+        <div class="create-upload-title">点击或拖入一幅水墨画</div>
+        <div class="create-upload-note">支持 JPG / PNG / WEBP，建议长边 ≥ 1200px，单张 ≤ 20MB</div>
+        <button class="btn btn--teal" id="pickBtn" type="button">选择图片</button>
+        <div>
+          <button class="create-sample-link" id="sampleBtn" type="button">没有现成图片？用《富春山居图》试试 →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 动效舞台 -->
+    <section class="create-stage-wrap" id="stageWrap" hidden>
+      <div class="create-stage" id="createStage">
+        <div class="create-canvas-scroll">
+          <canvas id="createCanvas" class="create-canvas"></canvas>
+        </div>
+        <div class="create-stage-hint" id="stageHint">正在分离笔墨…</div>
+      </div>
+      <div class="create-controls">
+        <button class="btn btn--teal" id="micBtn" type="button">🎤 声音互动</button>
+        <button class="btn" id="reselectBtn" type="button">重新选择</button>
+        <span class="create-control-note">点击画面中的墨色元素，可触发局部动效</span>
+      </div>
+      <p class="create-privacy">图片只在你的浏览器本地处理，不上传、不存储；麦克风仅检测音量，不录音。</p>
+    </section>
+
+    <!-- 创作守则 -->
+    <section class="create-guide">
+      <h2 class="section-title">创 作 守 则</h2>
+      <ul class="create-guide-list">
+        <li>只让原画中<b>已经画出的元素</b>动：云气、水纹、枝叶、飞鸟、人物、屋舍各按其性。</li>
+        <li>不凭空添加画中<b>不存在</b>的飞鸟、烟雾、花瓣或水波粒子。</li>
+        <li>题字、落款、印章保持原位，不参与变形。</li>
+      </ul>
+    </section>
+
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="js/ink-engine-full.js?v=7"></script>
+  <script src="js/create.js?v=8"></script>
+</body>
+</html>

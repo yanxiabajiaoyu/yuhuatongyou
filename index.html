@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>与画同游——AI美育助教 · 序厅</title>
+  <meta name="description" content="与画同游：让中国画开口说话、邀你入画的AI美育助教。看古画、点触互动、与AI讲解员对话。">
+  <link rel="stylesheet" href="css/style.css?v=7">
+</head>
+<body data-page="lobby">
+
+  <!-- 入场黑场（CSS 动画自动淡出） -->
+  <div class="lobby-blackout" aria-hidden="true"></div>
+
+  <div class="page-wrap">
+
+    <!-- ======== 卷轴入场舞台：标题编排由 CSS 动画依次呈现 ======== -->
+    <header class="scroll-stage" id="scrollStage">
+      <h1 class="project-title">与画同游</h1>
+      <div class="project-sub-row">
+        <span class="project-subtitle">A I 美 育 助 教</span>
+        <span class="project-seal">同游</span>
+      </div>
+      <p class="project-tagline">
+        让中国画「开口说话、邀你入画」——<br>
+        AI讲解员因材施教地讲，动态展厅邀你动手玩。
+      </p>
+    </header>
+
+    <hr class="ink-divider">
+
+    <!-- ======== 展厅入口（按闯关顺序：千里江山→富春山居→墨葡萄） ======== -->
+    <h2 class="section-title lobby-late">展 厅 入 口</h2>
+    <p class="lobby-late" style="text-align:center; color:var(--ink-soft); font-size:0.95rem; letter-spacing:2px;">
+      完成一厅的观画任务，即可解锁下一厅
+    </p>
+
+    <div class="hall-entry-list" id="hallEntryList">
+
+      <!-- 第一厅：千里江山图（初始解锁） -->
+      <a class="hall-card" data-hall="qianli" href="hall-qianli.html">
+        <div class="thumb thumb--qianli">
+          <img src="assets/images/qianli/display.jpg" alt="千里江山图缩略" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover;">
+          <div class="thumb-title">千里江山图</div>
+          <div class="lock-seal-corner">锁</div>
+        </div>
+        <div class="card-body">
+          <div class="card-title">千里江山图</div>
+          <div class="card-meta">北宋 · 王希孟 · 青绿山水</div>
+          <div class="card-state"></div>
+        </div>
+      </a>
+
+      <!-- 第二厅：富春山居图（初始锁定） -->
+      <a class="hall-card" data-hall="fuchun" href="hall-fuchun.html">
+        <div class="thumb thumb--fuchun">
+          <img src="assets/images/fuchun/display.jpg" alt="富春山居图缩略" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover;">
+          <div class="thumb-title">富春山居图</div>
+          <div class="lock-seal-corner">锁</div>
+        </div>
+        <div class="card-body">
+          <div class="card-title">富春山居图</div>
+          <div class="card-meta">元 · 黄公望 · 水墨山水</div>
+          <div class="card-state"></div>
+        </div>
+      </a>
+
+      <!-- 第三厅：墨葡萄图（初始锁定） -->
+      <a class="hall-card" data-hall="moputao" href="hall-moputao.html">
+        <div class="thumb thumb--moputao">
+          <img src="assets/images/moputao/full.jpg" alt="墨葡萄图缩略" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover;">
+          <div class="thumb-title">墨葡萄图</div>
+          <div class="lock-seal-corner">锁</div>
+        </div>
+        <div class="card-body">
+          <div class="card-title">墨葡萄图</div>
+          <div class="card-meta">明 · 徐渭 · 大写意花鸟</div>
+          <div class="card-state"></div>
+        </div>
+      </a>
+
+    </div>
+
+    <!-- ======== 自由创作入口：上传任意水墨画 ======== -->
+    <a class="create-entry lobby-late" href="create.html">
+      <div class="create-entry-inner">
+        <span class="create-entry-seal">创</span>
+        <div class="create-entry-text">
+          <div class="create-entry-title">自由创作 · 上传你的水墨画</div>
+          <div class="create-entry-desc">任意水墨画 → 自动分离笔墨元素并生成动态画面，只让画中已有的元素动起来</div>
+        </div>
+        <span class="create-entry-arrow">→</span>
+      </div>
+    </a>
+
+    <!-- ======== 闯关进度：三枚鉴藏印 ======== -->
+    <h2 class="section-title lobby-late">闯 关 进 度</h2>
+    <div class="progress-seals lobby-late" id="progressSeals">
+      <div class="seal-item" data-seal="qianli">
+        <div class="seal-stamp is-dim">千里<br>江山</div>
+        <div class="seal-name">未完成</div>
+      </div>
+      <div class="seal-item" data-seal="fuchun">
+        <div class="seal-stamp is-dim">富春<br>山居</div>
+        <div class="seal-name">未完成</div>
+      </div>
+      <div class="seal-item" data-seal="moputao">
+        <div class="seal-stamp is-dim">墨葡<br>萄图</div>
+        <div class="seal-name">未完成</div>
+      </div>
+    </div>
+
+    <!-- ======== 备用入口：纯对话版直达 ======== -->
+    <div class="lobby-actions lobby-late">
+      <a class="btn btn--solid" id="cozeDirectBtn" href="#" target="_blank" rel="noopener">纯对话版直达</a>
+      <p style="margin-top:14px; font-size:0.88rem; color:var(--ink-soft);">
+        网络或组件异常时，可通过此入口直接使用 AI 讲解员
+      </p>
+    </div>
+
+    <!-- ======== 页脚 ======== -->
+    <footer class="lobby-footer lobby-late">
+      <p style="margin-bottom:8px;">「与画同游」AI美育助教 · 教育公益项目</p>
+      <button class="reset-link" id="resetProgress">重置闯关进度</button>
+    </footer>
+
+  </div>
+
+  <!-- 轻提示 -->
+  <div class="toast" id="toast"></div>
+
+  <script src="js/config.js?v=4"></script>
+  <script src="js/main.js?v=4"></script>
+</body>
+</html>

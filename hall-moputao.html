@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>墨葡萄图厅 · 与画同游</title>
+  <meta name="description" content="明代徐渭《墨葡萄图》互动展厅：立轴徐徐展开、局部放大细赏、点藤叶看枝叶轻摆、点葡萄看果串微颤，与AI讲解员同赏大写意花鸟。">
+  <link rel="stylesheet" href="css/style.css?v=7">
+</head>
+<body data-page="hall" data-hall="moputao">
+
+  <div class="page-wrap">
+
+    <!-- ======== 顶部通栏：返回 / 竖排画名+作者印章 / 环境音+本厅印章 ======== -->
+    <header class="hall-topbar">
+      <div class="topbar-side topbar-side--left">
+        <a class="back-link" href="index.html">← 返回序厅</a>
+      </div>
+      <div class="topbar-center">
+        <h1 class="hall-title-v">墨葡萄图</h1>
+        <div class="topbar-meta">
+          <span class="topbar-meta-text">明 · 徐渭</span>
+          <span class="seal-mini">徐渭</span>
+          <span class="topbar-meta-text">第三厅 · 共三厅</span>
+        </div>
+      </div>
+      <div class="topbar-side topbar-side--right">
+        <button class="ambient-toggle" id="ambientToggle" type="button">听声</button>
+        <span class="ambient-state" id="ambientState">已关</span>
+        <span class="seal-mini seal-mini--round is-dim" id="hallSealMini" title="本厅鉴藏印">藏</span>
+      </div>
+    </header>
+
+    <!-- ======== 区域一：画作展示区（立轴展开 + 局部放大窗 + 题跋） ======== -->
+    <section class="hall-section">
+      <div class="section-head">
+        <span class="section-no">壹</span>
+        <span class="section-name">画作展示</span>
+        <span class="section-hint">立轴徐徐展开 · 局部可以放大细赏</span>
+      </div>
+
+      <div class="hanging-wrap">
+        <!-- 立轴：自上向下徐徐展开（CSS clip-path 动画） -->
+        <div class="hanging-scroll">
+          <div class="rod rod--top" aria-hidden="true"></div>
+          <div class="scroll-cloth">
+            <img src="assets/images/moputao/full.jpg" alt="墨葡萄图全轴">
+          </div>
+          <div class="rod rod--bottom" aria-hidden="true"></div>
+        </div>
+
+        <!-- 立轴旁竖排题跋 -->
+        <aside class="tiba-panel">
+          <span class="tiba-title">徐渭自题</span>
+          <div class="tiba-poem">半生落魄已成翁，独立书斋啸晚风。笔底明珠无处卖，闲抛闲掷野藤中。</div>
+          <div class="tiba-note">一个潦倒天才的呐喊与自嘲。</div>
+        </aside>
+      </div>
+
+      <!-- 局部放大窗 -->
+      <div class="detail-strip">
+        <button class="detail-item" type="button" data-full="assets/images/moputao/details/vine.jpg" data-cap="老藤 · 焦墨枯笔">
+          <div class="detail-thumb"><img src="assets/images/moputao/details/vine.jpg" alt="局部：老藤"></div>
+          <div class="detail-cap">老藤 · 焦墨枯笔<br><small>点击放大</small></div>
+        </button>
+        <button class="detail-item" type="button" data-full="assets/images/moputao/details/grapes.jpg" data-cap="葡萄 · 淡墨点簇">
+          <div class="detail-thumb"><img src="assets/images/moputao/details/grapes.jpg" alt="局部：葡萄"></div>
+          <div class="detail-cap">葡萄 · 淡墨点簇<br><small>点击放大</small></div>
+        </button>
+        <button class="detail-item" type="button" data-full="assets/images/moputao/details/poem.jpg" data-cap="题诗 · 行草">
+          <div class="detail-thumb"><img src="assets/images/moputao/details/poem.jpg" alt="局部：题诗"></div>
+          <div class="detail-cap">题诗 · 行草<br><small>点击放大</small></div>
+        </button>
+      </div>
+
+      <p class="painting-caption">
+        <strong>《墨葡萄图》</strong> · 明 · 徐渭 · 纸本水墨 · 故宫博物院藏<br>
+        徐渭自题：「半生落魄已成翁，独立书斋啸晚风。笔底明珠无处卖，闲抛闲掷野藤中。」<br>
+        图像来源：公有领域高清影像（全轴）
+      </p>
+    </section>
+
+    <!-- ======== 区域二+三：互动体验 / 观画任务卡（桌面7:3并排） ======== -->
+    <div class="interact-task-grid">
+      <section class="hall-section">
+        <div class="section-head">
+          <span class="section-no">贰</span>
+          <span class="section-name">互动体验</span>
+        </div>
+
+        <div class="interact-stage stage-moputao" id="stage">
+          <!-- 水墨动画引擎：自动分割画中元素并赋予合理运动 -->
+          <canvas class="ink-canvas" id="inkCanvas"></canvas>
+        </div>
+        <p class="interact-tip">
+          玩法：画中的<b>藤叶、葡萄、藤蔓</b>会自动轻摆；<b>点一点</b>画中任意元素，看它应声而动；对画<b>轻语或吹气</b>，枝叶摆动加剧。
+        </p>
+
+        <!-- 声音互动 -->
+        <div class="sound-card" id="soundCard">
+          <h3>声音互动</h3>
+          <p class="sound-desc"><b>轻语或吹气</b> → 藤叶摆动加剧</p>
+          <p class="sound-status" id="soundStatus">未开启</p>
+          <div class="mic-meter" id="micMeter"><div class="mic-meter-bar" id="micMeterBar"></div></div>
+          <button class="btn btn--teal" id="soundEnableBtn">开启麦克风</button>
+        </div>
+      </section>
+
+      <section class="hall-section">
+        <div class="section-head">
+          <span class="section-no">叁</span>
+          <span class="section-name">观画任务卡</span>
+          <span class="section-hint">完成三个任务，为本厅盖印</span>
+        </div>
+
+        <div class="task-list">
+          <div class="task-item" data-task="find">
+            <div class="task-no">壹</div>
+            <div class="task-body">
+              <div class="task-name">找一找 · 藤间明珠</div>
+              <div class="task-desc">在下方互动区点一点画中的墨葡萄，看果串轻轻颤动。</div>
+            </div>
+            <div class="task-seal-round">鉴藏</div>
+          </div>
+          <div class="task-item" data-task="interact">
+            <div class="task-no">贰</div>
+            <div class="task-body">
+              <div class="task-name">点一点 · 风动藤叶</div>
+              <div class="task-desc">再点一点画中的藤叶或藤蔓，看它们在风里轻轻摆动。</div>
+            </div>
+            <div class="task-seal-round">鉴藏</div>
+          </div>
+          <div class="task-item" data-task="quiz">
+            <div class="task-no">叁</div>
+            <div class="task-body">
+              <div class="task-name">答一答 · 画中题诗</div>
+              <div class="task-desc">在下方对话区向 AI 讲解员提问：徐渭在这幅画上题了一首什么诗？得到答案后，点下方按钮盖章。</div>
+              <button class="btn btn--teal" data-quiz-btn>我已答对</button>
+            </div>
+            <div class="task-seal-round">鉴藏</div>
+          </div>
+        </div>
+
+        <div class="hall-seal-area" id="hallSealArea" hidden>
+          <div class="seal-stamp" id="hallSeal">墨葡<br>萄图</div>
+          <p class="seal-msg">
+            <strong>本厅任务全部完成，印章已点亮！</strong><br>
+            三间展厅全部通关——你已与三幅传世名画同游。<a href="index.html" style="color:var(--vermilion); text-decoration:underline;">返回序厅看印章 →</a>
+          </p>
+        </div>
+      </section>
+    </div>
+
+    <!-- ======== 区域四：AI讲解员对话区 ======== -->
+    <section class="hall-section hall-section--chat">
+      <div class="section-head">
+        <span class="section-no">肆</span>
+        <span class="section-name">AI讲解员</span>
+        <span class="section-hint">看画产生疑问？随手问。</span>
+      </div>
+      <div class="chat-grid">
+        <div class="chat-aside">
+          <p>看画时有了好奇，随时问身边的 AI 讲解员。比如：</p>
+          <div class="ask-list">
+            <div class="ask-item">徐渭在画上题了一首什么诗？</div>
+            <div class="ask-item">为什么是墨葡萄，不是紫葡萄？</div>
+            <div class="ask-item">什么是「大写意」？</div>
+          </div>
+        </div>
+        <div class="chat-box">
+          <div class="chat-mount" id="chatMountDesktop"></div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ======== 局部放大灯箱 ======== -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-label="局部放大">
+    <img id="lightboxImg" src="" alt="局部放大图">
+    <div class="lightbox-cap" id="lightboxCap"></div>
+  </div>
+
+  <!-- ======== 移动端：对话区悬浮按钮 + 底部抽屉 ======== -->
+  <button class="chat-fab" id="chatFab">问讲解员</button>
+  <div class="chat-drawer-mask" id="chatDrawerMask"></div>
+  <div class="chat-drawer" id="chatDrawer">
+    <div class="drawer-head">
+      <span class="drawer-title">AI讲解员</span>
+      <button class="drawer-close" id="chatDrawerClose" aria-label="关闭">×</button>
+    </div>
+    <div class="chat-box" style="border:none; flex:1;">
+      <div class="chat-mount" id="chatMountMobile"></div>
+    </div>
+  </div>
+
+  <!-- ======== 麦克风授权弹窗 ======== -->
+  <div class="modal-mask" id="micModal">
+    <div class="modal-card">
+      <h3>开启声音互动</h3>
+      <p>本展厅支持用声音与古画互动：对画<b>轻语或吹气</b>，藤叶摆动加剧。需要调用你的麦克风来感知声音大小。</p>
+      <p class="privacy-note">仅在你设备本地检测声音大小，不录音、不上传、不存储。</p>
+      <div class="modal-actions">
+        <button class="btn btn--solid" id="micAllow">允许使用麦克风</button>
+        <button class="btn" id="micDeny">暂不开启</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 轻提示 -->
+  <div class="toast" id="toast"></div>
+
+  <script src="js/config.js?v=4"></script>
+  <script src="js/engine.js?v=5"></script>
+  <script src="js/audio.js?v=4"></script>
+  <script src="js/main.js?v=4"></script>
+</body>
+</html>

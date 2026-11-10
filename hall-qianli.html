@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>千里江山图厅 · 与画同游</title>
+  <meta name="description" content="北宋王希孟《千里江山图》互动展厅：拖滚长卷、随卷入画、点击瀑布、拍手让水势骤急，与AI讲解员同游青绿山水。">
+  <link rel="stylesheet" href="css/style.css?v=7">
+</head>
+<body data-page="hall" data-hall="qianli">
+
+  <div class="page-wrap">
+
+    <!-- ======== 顶部通栏：返回 / 竖排画名+作者印章 / 环境音+本厅印章 ======== -->
+    <header class="hall-topbar">
+      <div class="topbar-side topbar-side--left">
+        <a class="back-link" href="index.html">← 返回序厅</a>
+      </div>
+      <div class="topbar-center">
+        <h1 class="hall-title-v">千里江山图</h1>
+        <div class="topbar-meta">
+          <span class="topbar-meta-text">北宋 · 王希孟</span>
+          <span class="seal-mini">希孟</span>
+          <span class="topbar-meta-text">第一厅 · 共三厅</span>
+        </div>
+      </div>
+      <div class="topbar-side topbar-side--right">
+        <button class="ambient-toggle" id="ambientToggle" type="button">听声</button>
+        <span class="ambient-state" id="ambientState">已关</span>
+        <span class="seal-mini seal-mini--round is-dim" id="hallSealMini" title="本厅鉴藏印">藏</span>
+      </div>
+    </header>
+
+    <!-- ======== 区域一：画作展示区（长卷横向探索） ======== -->
+    <section class="hall-section">
+      <div class="section-head">
+        <span class="section-no">壹</span>
+        <span class="section-name">画作展示</span>
+        <span class="section-hint">从右往左 · 徐徐展卷</span>
+      </div>
+
+      <div class="hs-layout">
+        <div class="hs-main">
+          <!-- 长卷舞台 -->
+          <div class="hs-stage">
+            <div class="hs-viewport" id="hsViewport">
+              <div class="hs-track" id="hsTrack">
+                <div class="hs-edge" aria-hidden="true"></div>
+                <div class="hs-img-wrap">
+                  <img class="hs-img" id="hsImg" src="assets/images/qianli/full.jpg?v=2" alt="千里江山图全卷">
+                  <!-- 瀑布热点（找一找目标） -->
+                  <button class="hotspot" id="hsHotspotWaterfall" style="left:40.5%; top:48%;" aria-label="瀑布，点一点">
+                    <span class="hotspot-dot"></span>
+                    <span class="hotspot-label">瀑布</span>
+                  </button>
+                  <!-- 长卷内不再叠加生成的水流：动效只在互动区让原画瀑布流动 -->
+                </div>
+                <div class="hs-edge" aria-hidden="true"></div>
+              </div>
+            </div>
+            <div class="hs-hint">← 向左拖滚 · 徐徐展卷</div>
+          </div>
+
+          <!-- 控制条：自动导览 + 全卷缩略导航 -->
+          <div class="hs-controls">
+            <button class="btn hs-tour-btn" id="hsTourBtn" type="button">随卷入画</button>
+            <div class="hs-nav" id="hsNav" aria-label="全卷缩略导航">
+              <img class="hs-nav-thumb" src="assets/images/qianli/thumb.jpg" alt="">
+              <div class="hs-nav-box" id="hsNavBox"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 侧栏竖排赏析面板（段落由 JS 随卷位联动渲染） -->
+        <aside class="hs-panel" id="hsPanel" aria-live="polite"></aside>
+      </div>
+
+      <p class="painting-caption">
+        <strong>《千里江山图》</strong> · 北宋 · 王希孟 · 绢本设色 · 故宫博物院藏<br>
+        图像来源：公有领域高清影像（全卷）
+      </p>
+    </section>
+
+    <!-- ======== 区域二+三：互动体验 / 观画任务卡（桌面7:3并排） ======== -->
+    <div class="interact-task-grid">
+      <section class="hall-section">
+        <div class="section-head">
+          <span class="section-no">贰</span>
+          <span class="section-name">互动体验</span>
+        </div>
+
+        <div class="interact-stage stage-qianli" id="stage">
+          <!-- 水墨动画引擎：自动分割画中元素并赋予合理运动 -->
+          <canvas class="ink-canvas" id="inkCanvas"></canvas>
+        </div>
+        <p class="interact-tip">
+          玩法：画中的<b>飞瀑、云气</b>会自动流动；<b>点一点</b>画中任意元素，看它应声而动；对麦克风<b>拍手一声</b>，瀑布水势骤急。
+        </p>
+
+        <!-- 声音互动 -->
+        <div class="sound-card" id="soundCard">
+          <h3>声音互动</h3>
+          <p class="sound-desc"><b>拍手一声</b> → 画中瀑布水势骤急</p>
+          <p class="sound-status" id="soundStatus">未开启</p>
+          <div class="mic-meter" id="micMeter"><div class="mic-meter-bar" id="micMeterBar"></div></div>
+          <button class="btn btn--teal" id="soundEnableBtn">开启麦克风</button>
+        </div>
+      </section>
+
+      <section class="hall-section">
+        <div class="section-head">
+          <span class="section-no">叁</span>
+          <span class="section-name">观画任务卡</span>
+          <span class="section-hint">完成三个任务，为本厅盖印</span>
+        </div>
+
+        <div class="task-list">
+          <div class="task-item" data-task="find">
+            <div class="task-no">壹</div>
+            <div class="task-body">
+              <div class="task-name">找一找 · 展卷寻瀑</div>
+              <div class="task-desc">在上面的大长卷上找到藏在山涧的瀑布（朱红圆点），点一点它。</div>
+            </div>
+            <div class="task-seal-round">鉴藏</div>
+          </div>
+          <div class="task-item" data-task="interact">
+            <div class="task-no">贰</div>
+            <div class="task-body">
+              <div class="task-name">点一点 · 飞瀑流泉</div>
+              <div class="task-desc">在互动区点一点瀑布，看水流倾泻而下。</div>
+            </div>
+            <div class="task-seal-round">鉴藏</div>
+          </div>
+          <div class="task-item" data-task="quiz">
+            <div class="task-no">叁</div>
+            <div class="task-body">
+              <div class="task-name">答一答 · 青绿之秘</div>
+              <div class="task-desc">在下方对话区向 AI 讲解员提问：这幅画的青绿颜色，是用什么材料画出来的？得到答案后，点下方按钮盖章。</div>
+              <button class="btn btn--teal" data-quiz-btn>我已答对</button>
+            </div>
+            <div class="task-seal-round">鉴藏</div>
+          </div>
+        </div>
+
+        <div class="hall-seal-area" id="hallSealArea" hidden>
+          <div class="seal-stamp" id="hallSeal">千里<br>江山</div>
+          <p class="seal-msg">
+            <strong>本厅任务全部完成，印章已点亮！</strong><br>
+            「富春山居图」展厅已解锁。<a href="hall-fuchun.html" style="color:var(--vermilion); text-decoration:underline;">前往下一厅 →</a>
+          </p>
+        </div>
+      </section>
+    </div>
+
+    <!-- ======== 区域四：AI讲解员对话区 ======== -->
+    <section class="hall-section hall-section--chat">
+      <div class="section-head">
+        <span class="section-no">肆</span>
+        <span class="section-name">AI讲解员</span>
+        <span class="section-hint">看画产生疑问？随手问。</span>
+      </div>
+      <div class="chat-grid">
+        <div class="chat-aside">
+          <p>看画时有了好奇，随时问身边的 AI 讲解员。比如：</p>
+          <div class="ask-list">
+            <div class="ask-item">这幅画的青绿颜色用什么画的？</div>
+            <div class="ask-item">王希孟画这幅画时多大？</div>
+            <div class="ask-item">画里有多少个小人儿？</div>
+          </div>
+        </div>
+        <div class="chat-box">
+          <div class="chat-mount" id="chatMountDesktop"></div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ======== 移动端：对话区悬浮按钮 + 底部抽屉 ======== -->
+  <button class="chat-fab" id="chatFab">问讲解员</button>
+  <div class="chat-drawer-mask" id="chatDrawerMask"></div>
+  <div class="chat-drawer" id="chatDrawer">
+    <div class="drawer-head">
+      <span class="drawer-title">AI讲解员</span>
+      <button class="drawer-close" id="chatDrawerClose" aria-label="关闭">×</button>
+    </div>
+    <div class="chat-box" style="border:none; flex:1;">
+      <div class="chat-mount" id="chatMountMobile"></div>
+    </div>
+  </div>
+
+  <!-- ======== 麦克风授权弹窗 ======== -->
+  <div class="modal-mask" id="micModal">
+    <div class="modal-card">
+      <h3>开启声音互动</h3>
+      <p>本展厅支持用声音与古画互动：<b>拍手一声</b>，画中的瀑布水势骤急。需要调用你的麦克风来感知声音大小。</p>
+      <p class="privacy-note">仅在你设备本地检测声音大小，不录音、不上传、不存储。</p>
+      <div class="modal-actions">
+        <button class="btn btn--solid" id="micAllow">允许使用麦克风</button>
+        <button class="btn" id="micDeny">暂不开启</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 轻提示 -->
+  <div class="toast" id="toast"></div>
+
+  <script src="js/config.js?v=4"></script>
+  <script src="js/engine.js?v=5"></script>
+  <script src="js/audio.js?v=4"></script>
+  <script src="js/scroll.js?v=5"></script>
+  <script src="js/main.js?v=4"></script>
+</body>
+</html>
